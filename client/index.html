@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KSP Crime Database - Intelligent Assistant</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Intelligent conversational AI and temporal intelligence graph portal for Karnataka State Police database analysis.">
+    <meta name="author" content="Karnataka State Police DIBD">
+    
+    <!-- Google Fonts: Outfit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Radial Background Gradient Layer -->
+    <div class="bg-glow"></div>
+
+    <!-- Layout Container -->
+    <div class="app-container">
+        
+        <!-- Sidebar (Session History & Forensic Ingest) -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-shield-halved brand-logo"></i>
+                <div class="brand-text">
+                    <h1>KSP INTEL</h1>
+                    <span>State Intelligence Portal</span>
+                </div>
+            </div>
+            
+            <!-- Ingestion Panel -->
+            <div class="aside-section">
+                <h2>Forensic Ingestion (UFIP)</h2>
+                
+                <!-- Scanned FIR Drop Zone -->
+                <div class="ingest-box" id="pdfDropzone">
+                    <i class="fa-solid fa-file-pdf ingest-icon"></i>
+                    <p>Upload Scanned FIR (PDF)</p>
+                    <span class="file-status" id="pdfStatus">Awaiting document...</span>
+                    <input type="file" id="pdfFileInput" accept="application/pdf" style="display: none;">
+                </div>
+                
+                <!-- Audio Ingest Simulation -->
+                <div class="ingest-box" id="audioIngest">
+                    <i class="fa-solid fa-microphone-lines ingest-icon"></i>
+                    <p>Ingest Speech Audio</p>
+                    <span class="file-status" id="audioStatus">Awaiting audio input...</span>
+                </div>
+            </div>
+
+            <!-- Session Tracker -->
+            <div class="aside-section">
+                <h2>Conversational Memory</h2>
+                <div class="memory-card">
+                    <div class="memory-header">
+                        <span>L1/L2 Cache Summarizer</span>
+                        <span class="badge">Active</span>
+                    </div>
+                    <p id="memorySummary">No active summary. Submit a query to slide context window.</p>
+                </div>
+            </div>
+
+            <!-- Footer Compliance Indicators -->
+            <div class="sidebar-footer">
+                <div class="compliance-row">
+                    <i class="fa-solid fa-circle-check status-ok"></i>
+                    <span>DPDP Act 2023 Compliant</span>
+                </div>
+                <div class="compliance-row">
+                    <i class="fa-solid fa-lock status-ok"></i>
+                    <span>Zero-Trust ABAC Active</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard Content -->
+        <main class="main-content">
+            
+            <!-- Header Status Bar -->
+            <header class="header">
+                <div class="header-left">
+                    <h2 id="pageTitle">Temporal Intelligence Graph</h2>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <i class="fa-solid fa-user-shield user-icon"></i>
+                        <div class="user-info">
+                            <span class="username">Supervisor Atharva</span>
+                            <span class="role">Admin (Mysore District)</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Text & Voice Search Console -->
+            <section class="console-section">
+                <div class="console-bar">
+                    <button class="voice-btn" id="recordBtn" title="Speak in Kannada">
+                        <i class="fa-solid fa-microphone" id="micIcon"></i>
+                    </button>
+                    <input type="text" id="queryInput" placeholder="Ask about criminal networks, case links, or temporal paths..." autocomplete="off">
+                    <button class="search-btn" id="sendBtn">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+                <!-- Status & Trace Banner -->
+                <div class="trace-banner" id="traceBanner" style="display: none;">
+                    <span><i class="fa-solid fa-circle-notch fa-spin"></i> Trace: <strong id="correlationIdText">N/A</strong></span>
+                </div>
+            </section>
+
+            <!-- Dashboard Navigation Tabs -->
+            <nav class="nav-tabs">
+                <button class="tab-link active" onclick="switchTab('graph')">
+                    <i class="fa-solid fa-diagram-project"></i> Temporal Graph
+                </button>
+                <button class="tab-link" onclick="switchTab('timeline')">
+                    <i class="fa-solid fa-timeline"></i> Timeline Map
+                </button>
+                <button class="tab-link" onclick="switchTab('logs')">
+                    <i class="fa-solid fa-receipt"></i> Forensic Chain Logs
+                </button>
+            </nav>
+
+            <!-- Tab Contents -->
+            <section class="display-section">
+                
+                <!-- Tab A: Graph Visualization -->
+                <div class="tab-content active" id="tab-graph">
+                    <div class="panel-card graph-panel">
+                        <div class="panel-header">
+                            <h3>Connection Link Topology</h3>
+                            <span class="degree-note">Degree Centrality Filter: &lt; 500 (Super-nodes Ignored)</span>
+                        </div>
+                        <div class="graph-svg-container" id="graphContainer">
+                            <!-- SVG network graph will be rendered dynamically here -->
+                            <svg class="network-svg" id="networkSvg">
+                                <g id="linksGroup"></g>
+                                <g id="nodesGroup"></g>
+                            </svg>
+                            <div class="empty-state" id="graphEmptyState">
+                                <i class="fa-solid fa-project-diagram"></i>
+                                <p>Submit a query to visualize suspect networks.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab B: Chronological Timeline -->
+                <div class="tab-content" id="tab-timeline">
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <h3>Temporal Association Timeline</h3>
+                        </div>
+                        <div class="timeline-container" id="timelineContainer">
+                            <div class="empty-state">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                                <p>Submit a query to map association roadmaps.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab C: Forensic Audit Logs -->
+                <div class="tab-content" id="tab-logs">
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <h3>Immutable Audit Chain (BSA Compliant)</h3>
+                            <span class="badge badge-warning">Signature Chained</span>
+                        </div>
+                        <div class="log-table-container">
+                            <table class="log-table" id="auditLogTable">
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp</th>
+                                        <th>Action</th>
+                                        <th>Input Hash</th>
+                                        <th>Chained Signature</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="auditLogBody">
+                                    <!-- Log rows will be dynamically populated -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <!-- Supervisor HITL Disclaimer Approval Modal -->
+    <div class="modal-overlay" id="approvalModal" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <i class="fa-solid fa-triangle-exclamation modal-alert-icon"></i>
+                <h2>Supervisor Disclaimer & Approval Gate</h2>
+            </div>
+            <div class="modal-body">
+                <p><strong>IMPORTANT:</strong> You are about to initiate a hypothetical **Network Disruption Centrality Analysis**. In accordance with KSP safety guardrails and algorithmic audits:</p>
+                <ul>
+                    <li>This analysis simulates connections mathematically and does not represent confirmed judicial labels.</li>
+                    <li>Model parameters exclude demographic markers to maintain parity compliance.</li>
+                    <li>This approval is permanently recorded in the immutable audit log under your signature.</li>
+                </ul>
+                <div class="input-field">
+                    <label for="supervisorPin">Input Authorization Security PIN:</label>
+                    <input type="password" id="supervisorPin" placeholder="••••" maxlength="4">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn btn-secondary" id="rejectBtn">Reject Simulation</button>
+                <button class="modal-btn btn-primary" id="approveBtn">Approve & Resume</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- App JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>

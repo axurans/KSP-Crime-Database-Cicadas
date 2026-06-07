@@ -1,0 +1,39 @@
+name: Deploy to Zoho Catalyst (Production)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Catalyst CLI
+        run: npm install -g zcatalyst-cli
+
+      - name: Install Backend Dependencies
+        run: |
+          cd functions/backend_logic
+          npm install
+
+      - name: Run E2E Test Suite
+        run: |
+          node test_e2e.js
+
+      - name: Deploy to Catalyst
+        env:
+          CATALYST_PROJECT_ID: "42971000000019001"
+          CATALYST_ORG_ID: "60072905661"
+          CATALYST_TOKEN: ${{ secrets.CATALYST_TOKEN }}
+        run: |
+          catalyst deploy --project $CATALYST_PROJECT_ID --org $CATALYST_ORG_ID --token $CATALYST_TOKEN

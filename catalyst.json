@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "targets": [
+      "backend_logic"
+    ],
+    "ignore": [],
+    "source": "functions"
+  },
+  "client": {
+    "source": "client",
+    "ignore": []
+  }
+}

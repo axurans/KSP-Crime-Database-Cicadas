@@ -1,0 +1,51 @@
+{
+  "circuit_name": "KSP_Crime_Intelligent_Workflow",
+  "description": "Multi-agent search and network disruption workflow with Async Hydration approval gates.",
+  "states": {
+    "Start": {
+      "type": "Start",
+      "next": "Query_Analysis"
+    },
+    "Query_Analysis": {
+      "type": "Function",
+      "function_name": "backend_logic",
+      "path": "/query",
+      "next": "Intent_Decision"
+    },
+    "Intent_Decision": {
+      "type": "Choice",
+      "choices": [
+        {
+          "variable": "$.intent",
+          "value": "SIMULATE_DISRUPTION",
+          "next": "Async_Hydration_Gate"
+        }
+      ],
+      "default": "Format_Query_Response"
+    },
+    "Async_Hydration_Gate": {
+      "type": "SuspensionGate",
+      "gate_type": "SupervisorDisclaimer",
+      "state_saver_table": "Circuit_States",
+      "expiration_seconds": 86400,
+      "next": "Compute_Network_Centrality"
+    },
+    "Compute_Network_Centrality": {
+      "type": "AppSail",
+      "service_name": "network-analyzer",
+      "path": "/centrality",
+      "next": "Format_Disruption_Response"
+    },
+    "Format_Query_Response": {
+      "type": "Pass",
+      "next": "Complete"
+    },
+    "Format_Disruption_Response": {
+      "type": "Pass",
+      "next": "Complete"
+    },
+    "Complete": {
+      "type": "End"
+    }
+  }
+}

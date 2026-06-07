@@ -1,0 +1,259 @@
+{
+  "tables": [
+    {
+      "name": "Nodes",
+      "description": "Represents suspects, locations, accounts, and phone numbers in the temporal intelligence graph.",
+      "columns": [
+        {
+          "name": "node_id",
+          "type": "VarChar",
+          "length": 64,
+          "is_nullable": false,
+          "is_primary": true
+        },
+        {
+          "name": "name",
+          "type": "VarChar",
+          "length": 255,
+          "is_nullable": false
+        },
+        {
+          "name": "label",
+          "type": "VarChar",
+          "length": 50,
+          "is_nullable": false,
+          "description": "SUSPECT, TELECOM, BANK_ACCOUNT, or LOCATION"
+        },
+        {
+          "name": "created_at",
+          "type": "DateTime",
+          "is_nullable": false
+        },
+        {
+          "name": "dissolved_at",
+          "type": "DateTime",
+          "is_nullable": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_nodes_label",
+          "column": "label"
+        }
+      ]
+    },
+    {
+      "name": "Edges",
+      "description": "Represents the temporal and weighted relationships between graph nodes.",
+      "columns": [
+        {
+          "name": "edge_id",
+          "type": "VarChar",
+          "length": 64,
+          "is_nullable": false,
+          "is_primary": true
+        },
+        {
+          "name": "source_id",
+          "type": "VarChar",
+          "length": 64,
+          "is_nullable": false,
+          "is_foreign": true,
+          "references_table": "Nodes",
+          "references_column": "node_id"
+        },
+        {
+          "name": "target_id",
+          "type": "VarChar",
+          "length": 64,
+          "is_nullable": false,
+          "is_foreign": true,
+          "references_table": "Nodes",
+          "references_column": "node_id"
+        },
+        {
+          "name": "relationship_type",
+          "type": "VarChar",
+          "length": 50,
+          "is_nullable": false,
+          "description": "CALL_RECORD, CO_ACCUSED, or FINANCIAL_TX"
+        },
+        {
+          "name": "weight",
+          "type": "Double",
+          "is_nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "DateTime",
+          "is_nullable": false
+        },
+        {
+          "name": "dissolved_at",
+          "type": "DateTime",
+          "is_nullable": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_edges_source",
+          "column": "source_id"
+        },
+        {
+          "name": "idx_edges_target",
+          "column": "target_id"
+        }
+      ]
+    },
+    {
+      "name": "FIRs",
+      "description": "First Information Reports parsed text payloads with legal sections and audit hashes.",
+      "columns": [
+        {
+          "name": "fir_id",
+          "type": "VarChar",
+          "length": 64,
+          "is_nullable": false,
+          "is_primary": true
+        },
+        {
+          "name": "case_id",
+          "type": "VarChar",
+          "length": 64,
+          "is_nullable": false
+        },
+        {
+          "name": "district",
+          "type": "VarChar",
+          "length": 100,
+          "is_nullable": false
+        },
+        {
+          "name": "police_station",
+          "type": "VarChar",
+          "length": 100,
+          "is_nullable": false
+        },
+        {
+          "name": "date_filed",
+          "type": "DateTime",
+          "is_nullable": false
+        },
+        {
+          "name": "narrative",
+          "type": "VarChar",
+          "length": 4000,
+          "is_nullable": false
+        },
+        {
+          "name": "sections",
+          "type": "VarChar",
+          "length": 255,
+          "is_nullable": false
+        },
+        {
+          "name": "forensic_hash",
+          "type": "VarChar",
+          "length": 64,
+          "is_nullable": false
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_firs_hash",
+          "column": "forensic_hash"
+        }
+      ]
+    },
+    {
+      "name": "AI_Execution_Logs",
+      "description": "Immutable forensic audit trail for all system prompts, evaluations, and queries.",
+      "columns": [
+        {
+          "name": "log_id",
+          "type": "BigInt",
+          "is_nullable": false,
+          "is_primary": true,
+          "is_auto_increment": true
+        },
+        {
+          "name": "correlation_id",
+          "type": "VarChar",
+          "length": 64,
+          "is_nullable": false
+        },
+        {
+          "name": "job_id",
+          "type": "VarChar",
+          "length": 64,
+          "is_nullable": false
+        },
+        {
+          "name": "timestamp",
+          "type": "DateTime",
+          "is_nullable": false
+        },
+        {
+          "name": "action",
+          "type": "VarChar",
+          "length": 100,
+          "is_nullable": false
+        },
+        {
+          "name": "prompt_tokens",
+          "type": "Int",
+          "is_nullable": false
+        },
+        {
+          "name": "completion_tokens",
+          "type": "Int",
+          "is_nullable": false
+        },
+        {
+          "name": "input_hash",
+          "type": "VarChar",
+          "length": 64,
+          "is_nullable": false
+        },
+        {
+          "name": "signature",
+          "type": "VarChar",
+          "length": 64,
+          "is_nullable": false
+        }
+      ]
+    },
+    {
+      "name": "Circuit_States",
+      "description": "Saves execution state to handle Async Hydration for human approval gates.",
+      "columns": [
+        {
+          "name": "job_id",
+          "type": "VarChar",
+          "length": 64,
+          "is_nullable": false,
+          "is_primary": true
+        },
+        {
+          "name": "state_data",
+          "type": "VarChar",
+          "length": 4000,
+          "is_nullable": false,
+          "description": "Serialized execution payload and parameters"
+        },
+        {
+          "name": "pending_gate",
+          "type": "VarChar",
+          "length": 50,
+          "is_nullable": false,
+          "description": "DISCLAIMER, RETRAINING, EXPUNGEMENT, SHARE, or PRIVACY"
+        },
+        {
+          "name": "updated_at",
+          "type": "DateTime",
+          "is_nullable": false
+        }
+      ]
+    }
+  ]
+}

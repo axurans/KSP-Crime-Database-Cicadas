@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+/functions/*/node_modules/
+
+# Local Catalyst configs
+.catalystrc
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+npm-debug.log*
+
+# IDE/Editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
